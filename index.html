@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter & Validator</title>
+    <style>
+        /* CSS Variables for Light/Dark Mode */
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #cbd5e1;
+            --input-bg: #ffffff;
+            --primary-btn: #2563eb;
+            --primary-btn-hover: #1d4ed8;
+            --secondary-btn: #e2e8f0;
+            --secondary-btn-text: #0f172a;
+            --secondary-btn-hover: #cbd5e1;
+            --hero-btn: #10b981;
+            --hero-btn-hover: #059669;
+            --error-bg: #fee2e2;
+            --error-text: #b91c1c;
+            --transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #020617;
+            --primary-btn: #3b82f6;
+            --primary-btn-hover: #2563eb;
+            --secondary-btn: #334155;
+            --secondary-btn-text: #f8fafc;
+            --secondary-btn-hover: #475569;
+            --error-bg: #7f1d1d;
+            --error-text: #fca5a5;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 2rem 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: var(--transition);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--secondary-btn);
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 1.5rem;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            padding: 1rem;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-btn);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            padding: 0.6rem 1.25rem;
+            cursor: pointer;
+            background-color: var(--primary-btn);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-btn-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-btn);
+            color: var(--secondary-btn-text);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-btn-hover);
+        }
+
+        .hero-container {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-btn {
+            background-color: var(--hero-btn);
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .hero-btn:hover {
+            background-color: var(--hero-btn-hover);
+            transform: translateY(-1px);
+        }
+
+        .personal-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .personal-info p {
+            margin: 0.3rem 0;
+        }
+
+        .personal-info a {
+            color: var(--primary-btn);
+            text-decoration: none;
+        }
+
+        .personal-info a:hover {
+            text-decoration: underline;
+        }
+
+        #error-msg {
+            color: var(--error-text);
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            background-color: var(--error-bg);
+            border-left: 4px solid var(--error-text);
+            border-radius: 4px;
+            display: none;
+            word-break: break-all;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>JSON Formatter & Validator</h2>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode" title="Toggle Theme">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+        <p class="subtitle">Paste your unformatted or minified JSON below to cleanly format it or validate syntax errors.</p>
+        
+        <div id="error-msg"></div>
+        <textarea id="json-input" placeholder='{&#10;  "status": "waiting",&#10;  "message": "Paste your JSON here"&#10;}' spellcheck="false"></textarea>
+        
+        <div class="btn-group">
+            <button onclick="formatJSON()">Format JSON</button>
+            <button class="btn-secondary" onclick="minifyJSON()">Minify</button>
+            <button class="btn-secondary" onclick="clearJSON()">Clear</button>
+        </div>
+
+        <div class="hero-container">
+            <a href="https://digitalheroesco.com" class="hero-btn">Built for Digital Heroes</a>
+        </div>
+
+        <div class="personal-info">
+            <strong>Developer Details:</strong>
+            <p>Name: Kammari Sushma</p>
+            <p>Email: <a href="mailto:sushu161@gmail.com">sushu161@gmail.com</a></p>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('json-input');
+        const errorMsg = document.getElementById('error-msg');
+        
+        // --- Theme Management ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (prefersDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize theme instantly
+        initTheme();
+
+        // --- JSON Functionality ---
+        function getJSON() {
+            const val = input.value.trim();
+            if (!val) {
+                errorMsg.style.display = 'none';
+                return null;
+            }
+            try {
+                errorMsg.style.display = 'none';
+                return JSON.parse(val);
+            } catch (e) {
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = "Invalid JSON: " + e.message;
+                return null;
+            }
+        }
+
+        function formatJSON() {
+            const obj = getJSON();
+            if (obj) input.value = JSON.stringify(obj, null, 4);
+        }
+
+        function minifyJSON() {
+            const obj = getJSON();
+            if (obj) input.value = JSON.stringify(obj);
+        }
+
+        function clearJSON() {
+            input.value = '';
+            errorMsg.style.display = 'none';
+            input.focus();
+        }
+    </script>
+</body>
+</html>
