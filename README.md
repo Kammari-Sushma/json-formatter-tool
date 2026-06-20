@@ -2,9 +2,10 @@
 
 Format, minify, and validate JSON instantly in your browser. Clean UI, dark mode, zero dependencies.  
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/878021f1-c0f7-4b71-b1f9-d793641a383c" />  
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1a104e9e-065c-4de3-97b1-973d9c8baf7c" />  
 
-<img width="1920" height="1080" alt="Screenshot 2026-06-20 172707" src="https://github.com/user-attachments/assets/30c01acb-0def-4a8b-8104-2a64836dfb1e" />  
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/974b9507-5d77-4e7c-864c-65c93279aecf" />  
+
 
 ## Features  
 
